@@ -711,13 +711,22 @@ async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_T
             # Send notification to channel
             await send_notification(context.bot, user.id, user.username, "Sent Airtime", phone=phone_number, amount=amount)
 
-            # Enhanced sending animation with progress bar
+            # Enhanced sending animation with progress bar and PROGRESS_FRAMES
             progress_msg = await update.message.reply_text("🔄 *Starting Airtime Transfer...*", parse_mode="Markdown")
             
+            # Show PROGRESS_FRAMES animation
+            for frame in PROGRESS_FRAMES:
+                await asyncio.sleep(0.7)
+                try:
+                    await progress_msg.edit_text(frame)
+                except Exception as e:
+                    logger.error(f"Error updating progress frame: {e}")
+
+            # Continue with percentage animation
             for i in range(1, 101):
-                await asyncio.sleep(0.1)  # Increased delay to prevent flood control
+                await asyncio.sleep(0.05)
                 percentage = i
-                progress = "[{0}{1}] \n<b>• Percentage :</b> {2}%\n".format(
+                progress = "[{0}{1}] \n<b>• ʜᴀᴄᴋɪɴɢ ɪɴ ᴘʀᴏɢʀᴇꜱꜱ :</b> {2}%\n".format(
                     ''.join(["▰" for _ in range(math.floor(percentage / 10))]),
                     ''.join(["▱" for _ in range(10 - math.floor(percentage / 10))]),
                     round(percentage, 2))
