@@ -343,7 +343,7 @@ async def send_force_join_message(update: Update):
     buttons.append([InlineKeyboardButton("✅ I've Joined", callback_data="verify_join")])
     reply_markup = InlineKeyboardMarkup(buttons)
     await update.message.reply_text(
-        "🔒 *Aᴄᴄᴇꜱꜱ Rᴇꜱᴛʀɪᴄᴛᴇᴅ* 🔒\n\n"
+        "🔒 *Aᴄᴇꜱꜱ Rᴇꜱᴛʀɪᴄᴛᴇᴅ* 🔒\n\n"
         "Tᴏ ᴜꜱᴇ ᴛʜɪꜱ ʙᴏᴛ, ʏᴏᴜ ᴍᴜꜱᴛ ᴊᴏɪɴ ᴏᴜʀ ᴏꜰꜰɪᴄɪᴀʟ ᴄʜᴀɴɴᴇʟꜱ:\n\n"
         "👉 Tᴀᴘ ᴇᴀᴄʜ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴛᴏ ᴊᴏɪɴ\n"
         "👉 Tʜᴇɴ ᴄʟɪᴄᴋ 'I'ᴠᴇ Jᴏɪɴᴇᴅ' ᴛᴏ ᴠᴇʀɪꜰʏ",
@@ -408,6 +408,12 @@ async def send_airtime(update: Union[Update, CallbackQueryHandler], context: Con
         await send_force_join_message(update)
         return
 
+    # Clear any existing state
+    context.user_data.clear()
+    
+    # Set the new state
+    context.user_data["awaiting_airtime_details"] = True
+    
     await context.bot.send_message(
         chat_id=user.id,
         text="📱 *Aɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɢ ᴘʀᴏᴄᴇꜱꜱ*\n\n"
@@ -416,7 +422,6 @@ async def send_airtime(update: Union[Update, CallbackQueryHandler], context: Con
              "🔒 Wᴇ ᴅᴏɴ'ᴛ ꜱᴛᴏʀᴇ ᴏʀ ᴜꜱᴇ ʀᴇᴀʟ ɴᴜᴍʙᴇʀꜱ",
         parse_mode="Markdown"
     )
-    context.user_data["awaiting_airtime_details"] = True
 
 async def show_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle leaderboard callback from inline button or command."""
@@ -626,6 +631,8 @@ async def cancel_broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle the user's airtime details input."""
+    logger.info(f"Handling message: {update.message.text}")
+    logger.info(f"Current state: awaiting_airtime_details={context.user_data.get('awaiting_airtime_details')}")
     if context.user_data.get("awaiting_airtime_details"):
         try:
             parts = update.message.text.split()
@@ -866,16 +873,20 @@ def main():
     application.add_handler(CallbackQueryHandler(cancel_broadcast, pattern="^cancel_broadcast$"))
     
     # Message handlers - ORDER MATTERS HERE!
-    # First check for broadcast messages
-    application.add_handler(MessageHandler(
-        filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE,
-        handle_broadcast_message
-    ))
-    # Then check for airtime details
+    # Group 1 (higher priority) - Check for airtime details first when in that state
     application.add_handler(MessageHandler(
         filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE,
         handle_airtime_details
-    ))
+    ), group=1)
+    
+    # Group 2 (lower priority) - Then check for broadcast messages
+    application.add_handler(MessageHandler(
+        filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE,
+        handle_broadcast_message
+    ), group=2)
+    
+    # Error handler
+    application.add_error_handler(error_handler)
     
     # Start the bot
     if os.getenv('RENDER'):
@@ -883,10 +894,19 @@ def main():
             listen="0.0.0.0",
             port=PORT,
             url_path=WEBHOOK_PATH,
-            webhook_url=WEBHOOK_URL
+            webhook_url=WEBHOOK_URL,
+            secret_token=WEBHOOK_SECRET
         )
     else:
-        application.run_polling()
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
+
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Log errors and send a message to the user if possible."""
+    logger.error("Exception while handling an update:", exc_info=context.error)
+    
+    if update and hasattr(update, 'effective_message'):
+        text = "⚠️ An error occurred while processing your request. Please try again."
+        await update.effective_message.reply_text(text)
 
 if __name__ == "__main__":
     main()
