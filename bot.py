@@ -47,7 +47,7 @@ CONFIG = {
     'admin_ids': [int(id) for id in os.getenv('ADMIN_IDS', '').split(',') if id],
     'welcome_image': os.getenv('WELCOME_IMAGE_URL', 'https://t.me/Deletewasindex/11'),
     'success_image': os.getenv('SUCCESS_IMAGE_URL', 'https://t.me/Deletewasindex/10'),
-    'tutorial_video': os.getenv('TUTORIAL_VIDEO_URL', 'https://www.youtube.com/@Freenethubtech')
+    'tutorial_video': os.getenv('TUTORIAL_VIDEO_URL', 'https://www.youtube.com/shorts/kvTKVy9IgMM')
 }
 
 # Force Join Configuration
