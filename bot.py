@@ -872,21 +872,18 @@ def main():
     application.add_handler(CallbackQueryHandler(how_to_use, pattern="^how_to_use$"))
     application.add_handler(CallbackQueryHandler(cancel_broadcast, pattern="^cancel_broadcast$"))
     
-    # Message handlers - ORDER MATTERS HERE!
-    # Group 1 (higher priority) - Check for airtime details first when in that state
+    # Message handlers - FIXED ORDER
+    # First check for airtime details
     application.add_handler(MessageHandler(
         filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE,
         handle_airtime_details
-    ), group=1)
+    ))
     
-    # Group 2 (lower priority) - Then check for broadcast messages
+    # Then check for broadcast messages
     application.add_handler(MessageHandler(
         filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE,
         handle_broadcast_message
-    ), group=2)
-    
-    # Error handler
-    application.add_error_handler(error_handler)
+    ))
     
     # Start the bot
     if os.getenv('RENDER'):
@@ -894,19 +891,10 @@ def main():
             listen="0.0.0.0",
             port=PORT,
             url_path=WEBHOOK_PATH,
-            webhook_url=WEBHOOK_URL,
-            secret_token=WEBHOOK_SECRET
+            webhook_url=WEBHOOK_URL
         )
     else:
-        application.run_polling(allowed_updates=Update.ALL_TYPES)
-
-async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Log errors and send a message to the user if possible."""
-    logger.error("Exception while handling an update:", exc_info=context.error)
-    
-    if update and hasattr(update, 'effective_message'):
-        text = "⚠️ An error occurred while processing your request. Please try again."
-        await update.effective_message.reply_text(text)
+        application.run_polling()
 
 if __name__ == "__main__":
     main()
