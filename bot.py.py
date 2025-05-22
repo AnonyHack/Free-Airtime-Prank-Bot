@@ -80,26 +80,26 @@ WEBHOOK_URL = os.getenv('WEBHOOK_URL', '') + WEBHOOK_PATH
 
 # Welcome message
 WELCOME_MESSAGE = """
-🌟 *Welcome to the Airtime Sender Bot!* 🌟
+🌟 𝗪ᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ Aɪʀᴛɪᴍᴇ Sᴇɴᴅᴇʀ Bᴏᴛ! 🌟
 
-🎭 This is a fun prank tool that "sends" airtime to phone numbers. 
+🎭 𝗧ʜɪꜱ ɪꜱ ᴀ ꜰᴜɴ ᴘʀᴀɴᴋ ᴛᴏᴏʟ ᴛʜᴀᴛ "ꜱᴇɴᴅꜱ" ᴀɪʀᴛɪᴍᴇ ᴛᴏ ᴘʜᴏɴᴇ ɴᴜᴍʙᴇʀꜱ.
 
-✨ *Quick Commands:*
-/sendairtime - Start the airtime sending process
-/howtouse - Detailed instructions
-/leaderboard - Top senders
-/contactus - Contact support
+✨ 𝗤ᴜɪᴄᴋ Cᴏᴍᴍᴀɴᴅꜱ:
+🔹 /sendairtime – Sᴛᴀʀᴛ ᴛʜᴇ ᴀɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɢ ᴘʀᴏᴄᴇꜱꜱ  
+🔹 /howtouse – Dᴇᴛᴀɪʟᴇᴅ ɪɴꜱᴛʀᴜᴄᴛɪᴏɴꜱ  
+🔹 /leaderboard – Tᴏᴘ ꜱᴇɴᴅᴇʀꜱ  
+🔹 /contactus – Cᴏɴᴛᴀᴄᴛ ꜱᴜᴘᴘᴏʀᴛ
 
-⚠️ *Note:* This is just for fun! No real airtime is sent.
+⚠️ 𝗡ᴏᴛᴇ: Tʜɪꜱ ɪꜱ ᴊᴜꜱᴛ ꜰᴏʀ ꜰᴜɴ! Nᴏ ʀᴇᴀʟ ᴀɪʀᴛɪᴍᴇ ɪꜱ ꜱᴇɴᴛ.
 """
 
 # Animation frames
 PROGRESS_FRAMES = [
-    "🟩⬜⬜⬜⬜ [13%] Initializing transaction...",
-    "🟩🟩⬜⬜⬜ [27%] Connecting to mobile network...",
-    "🟩🟩🟩⬜⬜ [41%] Verifying recipient...",
-    "🟩🟩🟩🟩⬜ [63%] Processing payment...",
-    "🟩🟩🟩🟩🟩 [100%] Transaction complete!",
+"🟩⬜⬜⬜⬜ [13%] Iɴɪᴛɪᴀʟɪᴢɪɴɢ ᴛʀᴀɴꜱᴀᴄᴛɪᴏɴ...",
+"🟩🟩⬜⬜⬜ [27%] Cᴏɴɴᴇᴄᴛɪɴɢ ᴛᴏ ᴍᴏʙɪʟᴇ ɴᴇᴛᴡᴏʀᴋ...",
+"🟩🟩🟩⬜⬜ [41%] Vᴇʀɪꜰʏɪɴɢ ʀᴇᴄɪᴘɪᴇɴᴛ...",
+"🟩🟩🟩🟩⬜ [63%] Pʀᴏᴄᴇꜱꜱɪɴɢ ᴘᴀʏᴍᴇɴᴛ...",
+"🟩🟩🟩🟩🟩 [100%] Tʀᴀɴꜱᴀᴄᴛɪᴏɴ ᴄᴏᴍᴘʟᴇᴛᴇ!",
 ]
 
 NETWORKS = ["Airtel", "MTN", "Africell", "Vodafone", "Uganda Telecom"]
@@ -243,16 +243,16 @@ def generate_airtime_message(phone, amount, name):
     return f"""
 💳  𝘼𝙞𝙧𝙩𝙞𝙢𝙚 𝙎𝙚𝙣𝙩 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡 !
 ━━━━━━━━━━━━━━━━━━━━
-│▸ 🪪 Name: {name}
-│▸ 📱 Phone: {phone}
-│▸ 📡 Network: {network}
-│▸ 🌍 Country: {country}
-│▸ ⭐ Airtime Amount: {amount:,} 
-│▸ ☀️ Weekday: {time_info['weekday']}  
-│▸ ⏰ Time: {time_info['time']} 
+│▸ 🪪 Nᴀᴍᴇ: {name}
+│▸ 📱 Pʜᴏɴᴇ: {phone}
+│▸ 📡 Nᴇᴛᴡᴏʀᴋ: {network}
+│▸ 🌍 Cᴏᴜɴᴛʀʏ: {country}
+│▸ ⭐ Aɪʀᴛɪᴍᴇ Aᴍᴏᴜɴᴛ: {amount:,}
+│▸ ☀️ Wᴇᴇᴋᴅᴀʏ: {time_info['weekday']}
+│▸ ⏰ Tɪᴍᴇ: {time_info['time']}
 ╰────────────···▸▸
 
-✅ Thank you for using our Service!
+✅ Tʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴜꜱɪɴɢ ᴏᴜʀ Sᴇʀᴠɪᴄᴇ!
 ▬▬▬▬「 ᴩᴏᴡᴇʀᴇᴅ ʙy 」▬▬▬▬
          • @MEGAHUBBOTS •
 """
@@ -337,10 +337,10 @@ async def send_force_join_message(update: Update):
     reply_markup = InlineKeyboardMarkup(buttons)
     
     await update.message.reply_text(
-        "🔒 *Access Restricted* 🔒\n\n"
-        "To use this bot, you must join our official channels:\n\n"
-        "👉 Tap each button below to join\n"
-        "👉 Then click 'I've Joined' to verify",
+        "🔒 *Aᴄᴄᴇꜱꜱ Rᴇꜱᴛʀɪᴄᴛᴇᴅ* 🔒\n\n"
+        "Tᴏ ᴜꜱᴇ ᴛʜɪꜱ ʙᴏᴛ, ʏᴏᴜ ᴍᴜꜱᴛ ᴊᴏɪɴ ᴏᴜʀ ᴏꜰꜰɪᴄɪᴀʟ ᴄʜᴀɴɴᴇʟꜱ:\n\n"
+        "👉 Tᴀᴘ ᴇᴀᴄʜ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴛᴏ ᴊᴏɪɴ\n"
+        "👉 Tʜᴇɴ ᴄʟɪᴄᴋ 'I'ᴠᴇ Jᴏɪɴᴇᴅ' ᴛᴏ ᴠᴇʀɪꜰʏ",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -353,13 +353,13 @@ async def verify_join_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     if await is_member_of_channels(user_id, context):
         await query.answer("✅ Verification successful! You can now use the bot.")
         await query.message.edit_text(
-            "✅ *Verification Complete!*\n\n"
-            "You've successfully joined all required channels.\n"
-            "Use /start to begin!",
+            "✅ *Vᴇʀɪꜰɪᴄᴀᴛɪᴏɴ Cᴏᴍᴘʟᴇᴛᴇ!*\n\n"
+            "Yᴏᴜ'ᴠᴇ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴊᴏɪɴᴇᴅ ᴀʟʟ ʀᴇQᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟꜱ.\n"
+            "Uꜱᴇ /start ᴛᴏ ʙᴇɢɪɴ!",
             parse_mode="Markdown"
         )
     else:
-        await query.answer("❌ You haven't joined all channels yet!", show_alert=True)
+        await query.answer("❌ Yᴏᴜ ʜᴀᴠᴇɴ'ᴛ ᴊᴏɪɴᴇᴅ ᴀʟʟ ᴄʜᴀɴɴᴇʟꜱ ʏᴇᴛ!", show_alert=True)
 
 # Command Handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -376,8 +376,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
         [InlineKeyboardButton("💸 Send Airtime", callback_data="send_airtime")],
-        [InlineKeyboardButton("📊 Leaderboard", callback_data="show_leaderboard"),
-         InlineKeyboardButton("ℹ️ How To Use", callback_data="how_to_use")]
     ]
     
     try:
@@ -406,10 +404,10 @@ async def send_airtime(update: Union[Update, CallbackQueryHandler], context: Con
 
     await context.bot.send_message(
         chat_id=user.id,
-        text="📱 *Airtime Sending Process*\n\n"
-             "Please send the phone number with country code and amount:\n"
-             "Example: `+256751722034 5000`\n\n"
-             "🔒 We don't store or use real numbers",
+        text="📱 *Aɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɢ ᴘʀᴏᴄᴇꜱꜱ*\n\n"
+             "Pʟᴇᴀꜱᴇ ꜱᴇɴᴅ ᴛʜᴇ ᴘʜᴏɴᴇ ɴᴜᴍʙᴇʀ ᴡɪᴛʜ ᴄᴏᴜɴᴛʀʏ ᴄᴏᴅᴇ ᴀɴᴅ ᴀᴍᴏᴜɴᴛ:\n"
+             "Exᴀᴍᴘʟᴇ: `+256751722034 5000`\n\n"
+             "🔒 Wᴇ ᴅᴏɴ'ᴛ ꜱᴛᴏʀᴇ ᴏʀ ᴜꜱᴇ ʀᴇᴀʟ ɴᴜᴍʙᴇʀꜱ",
         parse_mode="Markdown"
     )
     context.user_data["awaiting_airtime_details"] = True
@@ -418,7 +416,7 @@ async def show_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle leaderboard callback from inline button or command."""
     query = getattr(update, "callback_query", None)
     leaderboard_data = get_leaderboard()
-    leaderboard_text = "🏆 Top 10 Senders\n━━━━━━━━━━━━━━━━━\n"
+    leaderboard_text = "🏆 Tᴏᴘ 10 ꜱᴇɴᴅᴇʀꜱ\n━━━━━━━━━━━━━━━━━\n"
     medals = ["🥇", "🥈", "🥉"] + ["🔹"] * 7
     for idx, entry in enumerate(leaderboard_data):
         username = entry.get('username', 'Anonymous')
@@ -427,7 +425,7 @@ async def show_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
         username = str(username).replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
         leaderboard_text += f"{medals[idx]} {username}: {entry['total_amount']:,} UGX\n"
     if not leaderboard_data:
-        leaderboard_text += "\nLeaderboard is empty! Be the first with /sendairtime"
+        leaderboard_text += "\nLᴇᴀᴅᴇʀʙᴏᴀʀᴅ ɪꜱ ᴇᴍᴘᴛʏ! ʙᴇ ᴛʜᴇ ꜰɪʀꜱᴛ ᴡɪᴛʜ /sendairtime"
     # If called from button
     if query:
         await query.answer()
@@ -443,32 +441,33 @@ async def show_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def how_to_use(update: Union[Update, CallbackQueryHandler], context: ContextTypes.DEFAULT_TYPE):
     """Handle how-to-use command from button or command."""
     instructions = """
-📘 <b>Airtime Sender Bot Guide</b> 📘
+📘 Aɪʀᴛɪᴍᴇ Sᴇɴᴅᴇʀ Bᴏᴛ Gᴜɪᴅᴇ 📘
 
-1️⃣ <b>Getting Started</b>
+1️⃣ Gᴇᴛᴛɪɴɢ Sᴛᴀʀᴛᴇᴅ
 - Use /start to begin
-- Join required channels if prompted
+- Jᴏɪɴ ʀᴇQᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟꜱ ɪꜰ ᴘʀᴏᴍᴘᴛᴇᴅ
 
-2️⃣ <b>Sending Process</b>
+2️⃣ Sᴇɴᴅɪɴɢ Pʀᴏᴄᴇꜱꜱ
 - Use /sendairtime
-- Enter phone number and amount
-- Watch the magic happen!
+- Eɴᴛᴇʀ ᴘʜᴏɴᴇ ɴᴜᴍʙᴇʀ ᴀɴᴅ ᴀᴍᴏᴜɴᴛ
+- Wᴀᴛᴄʜ ᴛʜᴇ ᴍᴀɢɪᴄ ʜᴀᴘᴘᴇɴ!
 
-3️⃣ <b>Features</b>
-- Fun airtime sending simulation
-- Leaderboard tracking
-- Regular updates
+3️⃣ Fᴇᴀᴛᴜʀᴇꜱ
+- Fᴜɴ ᴀɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɢ ꜱɪᴍᴜʟᴀᴛɪᴏɴ
+- Lᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴛʀᴀᴄᴋɪɴɢ
+- Rᴇɢᴜʟᴀʀ ᴜᴘᴅᴀᴛᴇꜱ
 
-4️⃣ <b>Important Notes</b>
-- This is just for entertainment
-- No real airtime is sent
-- No personal data is stored
+4️⃣ Iᴍᴘᴏʀᴛᴀɴᴛ Nᴏᴛᴇꜱ
+- Tʜɪꜱ ɪꜱ ᴊᴜꜱᴛ ꜰᴏʀ ᴇɴᴛᴇʀᴛᴀɪɴᴍᴇɴᴛ
+- Nᴏ ʀᴇᴀʟ ᴀɪʀᴛɪᴍᴇ ɪꜱ ꜱᴇɴᴛ
+- Nᴏ ᴘᴇʀꜱᴏɴᴀʟ ᴅᴀᴛᴀ ɪꜱ ꜱᴛᴏʀᴇᴅ
 
-🎉 Enjoy the experience!
+🎉 Eɴᴊᴏʏ ᴛʜᴇ ᴇxᴘᴇʀɪᴇɴᴄᴇ!
+5️⃣ Fᴏʀ Mᴏʀᴇ Hᴇʟᴘ
 """
     
     keyboard = [
-        [InlineKeyboardButton("📺 Watch Tutorial", url=CONFIG['tutorial_video'])]
+        [InlineKeyboardButton("📺 Wᴀᴛᴄʜ Tᴜᴛᴏʀɪᴀʟ", url=CONFIG['tutorial_video'])]
     ]
     
     if isinstance(update, Update) and update.message:
@@ -493,17 +492,18 @@ async def contact_us(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     
     contact_text = """
-📞 *Contact Information* 📞
+📞 Cᴏɴᴛᴀᴄᴛ Iɴꜰᴏʀᴍᴀᴛɪᴏɴ 📞
 
-🔹 *Email:* freenethubbusiness@gmail.com
-🔹 *Business Hours:* 9AM - 5PM (EAT)
+🔹 Eᴍᴀɪʟ: freenethubbusiness@gmail.com  
+🔹 Bᴜꜱɪɴᴇꜱꜱ Hᴏᴜʀꜱ: 9AM - 5PM (EAT)
 
-📌 *For:*
-- Business inquiries
-- Bug reports
-- Feature requests
+📌 Fᴏʀ:
+- Bᴜꜱɪɴᴇꜱꜱ ɪɴQᴜɪʀɪᴇꜱ  
+- Bᴜɢ ʀᴇᴘᴏʀᴛꜱ  
+- Fᴇᴀᴛᴜʀᴇ ʀᴇQᴜᴇꜱᴛꜱ
 
-🚫 *Please don't spam!*
+🚫 Pʟᴇᴀꜱᴇ ᴅᴏɴ'ᴛ ꜱᴘᴀᴍ!
+
 ━━━━━━━━━━━━━━━━━━━━━━━━
 """
     await update.message.reply_text(
@@ -515,7 +515,7 @@ async def contact_us(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Enhanced stats command."""
     if not is_admin(update.effective_user.id):
-        await update.message.reply_text("⛔ *Access Denied*", parse_mode="Markdown")
+        await update.message.reply_text("⛔ *🅐🅒🅒🅔🅢🅢 🅓🅔🅝🅘🅔🅓*", parse_mode="Markdown")
         return
 
     user_count = get_user_count()
@@ -525,19 +525,19 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]).next().get('total', 0)
     
     stats_text = """
-📈 *Bot Statistics Dashboard* 📈
+📈 Bᴏᴛ Sᴛᴀᴛɪꜱᴛɪᴄꜱ Dᴀꜱʜʙᴏᴀʀᴅ 📈
 ━━━━━━━━━━━━━━━━━━━━━━━
-👥 *Users:*
-├─ Total: {}
-└─ Active Today: {}
+👥 Uꜱᴇʀꜱ:
+├─ Tᴏᴛᴀʟ: {}
+└─ Aᴄᴛɪᴠᴇ Tᴏᴅᴀʏ: {}
 
-💸 *Transactions:*
-├─ Total: {}
-└─ Total Airtime: {:,} UGX
+💸 Tʀᴀɴꜱᴀᴄᴛɪᴏɴꜱ:
+├─ Tᴏᴛᴀʟ: {}
+└─ Tᴏᴛᴀʟ Aɪʀᴛɪᴍᴇ: {:,}
 
-⚙️ *System:*
-├─ Uptime: 99.9%
-└─ Status: Operational
+⚙️ Sʏꜱᴛᴇᴍ:
+├─ Uᴘᴛɪᴍᴇ: 99.9%
+└─ Sᴛᴀᴛᴜꜱ: Oᴘᴇʀᴀᴛɪᴏɴᴀʟ
 ━━━━━━━━━━━━━━━━━━━━━━━
 """.format(
         user_count,
@@ -551,14 +551,14 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Broadcast command to send a message to all users."""
     if not is_admin(update.effective_user.id):
-        await update.message.reply_text("⛔ *Access Denied*", parse_mode="Markdown")
+        await update.message.reply_text("⛔ *🅐🅒🅒🅔🅢🅢 🅓🅔🅝🅘🅔🅓*", parse_mode="Markdown")
         return
 
     keyboard = [[InlineKeyboardButton("❌ Cancel", callback_data="cancel_broadcast")]]
     await update.message.reply_text(
-        "📢 *Broadcast Mode Enabled*\n\n"
-        "Please send the message you want to broadcast to all users.\n\n"
-        "If you want to cancel, click the button below.",
+        "📢 *Bʀᴏᴀᴅᴄᴀꜱᴛ Mᴏᴅᴇ Eɴᴀʙʟᴇᴅ*\n\n"
+        "Pʟᴇᴀꜱᴇ sᴇɴᴅ ᴛʜᴇ ᴍᴇꜱꜱᴀɢᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ bʀᴏᴀᴅᴄᴀꜱᴛ ᴛᴏ ᴀʟʟ ᴜꜱᴇʀꜱ.\n\n"
+        "Iꜣ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ, ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ.",
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
@@ -604,10 +604,10 @@ async def handle_broadcast_message(update: Update, context: ContextTypes.DEFAULT
         
         # Update processing message with results
         await processing_msg.edit_text(
-            f"📊 *Broadcast Results*\n\n"
-            f"✅ Success: {success}\n"
-            f"❌ Failures: {failures}\n"
-            f"📩 Total Sent: {success + failures}\n",
+            f"📊 *Bʀᴏᴀᴅᴄᴀꜱᴛ Rᴇꜱᴜʟᴛꜱ*\n\n"
+            f"✅ Sᴜᴄᴄᴇꜱꜱ: {success}\n"
+            f"❌ Fᴀɪʟᴜʀᴇꜱ: {failures}\n"
+            f"📩 Tᴏᴛᴀʟ Sᴇɴᴛ: {success + failures}\n",
             parse_mode="Markdown"
         )
 
@@ -676,9 +676,9 @@ async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_T
 
         except ValueError as e:
             await update.message.reply_text(
-                "❌ Invalid format. Please send:\n"
-                "PhoneNumber Amount\n"
-                "Example: `+256751722034 5000`",
+                "❌ Iɴᴠᴀʟɪᴅ ꜰᴏʀᴍᴀᴛ. Pʟᴇᴀꜱᴇ ꜱᴇɴᴅ:\n"
+                "Pʜᴏɴᴇ Nᴜᴍʙᴇʀ ᴀᴍᴏᴜɴᴛ\n"
+                "Exᴀᴍᴘʟᴇ: `+256751722034 5000`",
                 parse_mode="Markdown"
             )
 
