@@ -21,7 +21,7 @@ from telegram.ext import (
     CallbackQueryHandler,
     filters,
 )
-from telegram.error import BadRequest
+from telegram.error import BadRequest, RetryAfter
 from aiohttp import web
 from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageFilter
 import io
@@ -45,9 +45,9 @@ logger = logging.getLogger(__name__)
 CONFIG = {
     'token': os.getenv('TELEGRAM_BOT_TOKEN'),
     'admin_ids': [int(id) for id in os.getenv('ADMIN_IDS', '').split(',') if id],
-    'welcome_image': os.getenv('WELCOME_IMAGE_URL', 'https://envs.sh/rXD.jpg'),
-    'success_image': os.getenv('SUCCESS_IMAGE_URL', 'https://envs.sh/rX2.jpg'),  # Add your image URL here
-    'tutorial_video': os.getenv('TUTORIAL_VIDEO_URL', 'https://www.youtube.com/@Freenethubtech')  # Add your YouTube tutorial URL
+    'welcome_image': os.getenv('WELCOME_IMAGE_URL', 'https://t.me/Deletewasindex/11'),
+    'success_image': os.getenv('SUCCESS_IMAGE_URL', 'https://t.me/Deletewasindex/10'),
+    'tutorial_video': os.getenv('TUTORIAL_VIDEO_URL', 'https://www.youtube.com/@Freenethubtech')
 }
 
 # Force Join Configuration
@@ -440,7 +440,6 @@ async def show_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # If called from button
     if query:
         await query.answer()
-        # Only edit if the message exists and is not empty
         if query.message and (query.message.text or query.message.caption):
             await query.message.edit_text(leaderboard_text)
         else:
@@ -526,7 +525,7 @@ async def contact_us(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Enhanced stats command."""
     if not is_admin(update.effective_user.id):
-        await update.message.reply_text("⛔ *🅐🅒🅒🅔🅢🅢 🅓🅔🅝🅘🅔🅓*", parse_mode="Markdown")
+        await update.message.reply_text("⛔ *Access Denied*", parse_mode="Markdown")
         return
 
     user_count = get_user_count()
@@ -536,20 +535,20 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]).next().get('total', 0)
     
     stats_text = """
-📈 Bᴏᴛ Sᴛᴀᴛɪꜱᴛɪᴄꜱ Dᴀꜱʜʙᴏᴀʀᴅ 📈
-━━━━━━━━━━━━━━━━━━━━━━━
-👥 Uꜱᴇʀꜱ:
-├─ Tᴏᴛᴀʟ: {}
-└─ Aᴄᴛɪᴠᴇ Tᴏᴅᴀʏ: {}
+📈 *Bot Statistics Dashboard* 📈
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👥 *Users:*
+├─ Total: {}
+└─ Active Today: {}
 
-💸 Tʀᴀɴꜱᴀᴄᴛɪᴏɴꜱ:
-├─ Tᴏᴛᴀʟ: {}
-└─ Tᴏᴛᴀʟ Aɪʀᴛɪᴍᴇ: {:,}
+💸 *Transactions:*
+├─ Total: {}
+└─ Total Airtime: {:,} UGX
 
-⚙️ Sʏꜱᴛᴇᴍ:
-├─ Uᴘᴛɪᴍᴇ: 99.9%
-└─ Sᴛᴀᴛᴜꜱ: Oᴘᴇʀᴀᴛɪᴏɴᴀʟ
-━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ *System:*
+├─ Uptime: 99.9%
+└─ Status: Operational
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """.format(
         user_count,
         users_collection.count_documents({"join_date": {"$gte": datetime.now().strftime('%Y-%m-%d')}}),
@@ -565,60 +564,119 @@ async def broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⛔ *🅐🅒🅒🅔🅢🅢 🅓🅔🅝🅘🅔🅓*", parse_mode="Markdown")
         return
 
-    keyboard = [[InlineKeyboardButton("❌ Cancel", callback_data="cancel_broadcast")]]
-    await update.message.reply_text(
-        "📢 *Bʀᴏᴀᴅᴄᴀꜱᴛ Mᴏᴅᴇ Eɴᴀʙʟᴇᴅ*\n\n"
-        "Pʟᴇᴀꜱᴇ sᴇɴᴅ ᴛʜᴇ ᴍᴇꜱꜱᴀɢᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ bʀᴏᴀᴅᴄᴀꜱᴛ ᴛᴏ ᴀʟʟ ᴜꜱᴇʀꜱ.\n\n"
-        "Iꜣ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ, ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ.",
-        parse_mode="Markdown",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
-    
-    # Set state to indicate we're waiting for broadcast message
-    context.user_data["awaiting_broadcast"] = True
+    # Accept message directly after /broadcast, e.g. /broadcast Hello World
+    message = update.message.text
+    if message and message.strip().lower().startswith("/broadcast"):
+        message = message[len("/broadcast"):].strip()
+    else:
+        message = None
 
-async def handle_broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle the actual broadcast message."""
-    if not is_admin(update.effective_user.id):
+    if not message:
+        keyboard = [[InlineKeyboardButton("❌ Cancel", callback_data="cancel_broadcast")]]
+        await update.message.reply_text(
+            "📢 *Bʀᴏᴀᴅᴄᴀꜱᴛ Mᴏᴅᴇ Eɴᴀʙʟᴇᴅ*\n\n"
+            "Pʟᴇᴀꜱᴇ sᴇɴᴅ ᴛʜᴇ ᴍᴇꜱꜱᴀɢᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ bʀᴏᴀᴅᴄᴀꜱᴛ ᴛᴏ ᴀʟʟ ᴜꜱᴇʀꜱ.\n\n"
+            "Iꜣ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ, ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ.",
+            parse_mode="Markdown",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        context.user_data["awaiting_broadcast"] = True
         return
 
-    # Only process if we're in broadcast mode
+    # Send broadcast to all users
+    user_ids = get_all_users()
+    total_users = len(user_ids)
+    success = 0
+    failures = 0
+
+    progress_msg = await update.message.reply_text(
+        f"📤 Broadcasting to {total_users} users...",
+        parse_mode="Markdown"
+    )
+
+    for user_id in user_ids:
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=message,
+                parse_mode="Markdown"
+            )
+            success += 1
+            await asyncio.sleep(0.5)  # To avoid flood control
+        except RetryAfter as e:
+            logger.warning(f"Rate limited, waiting {e.retry_after} seconds")
+            await asyncio.sleep(e.retry_after)
+            try:
+                await context.bot.send_message(
+                    chat_id=user_id,
+                    text=message,
+                    parse_mode="Markdown"
+                )
+                success += 1
+            except Exception as e:
+                logger.warning(f"Failed to send to {user_id}: {e}")
+                failures += 1
+        except Exception as e:
+            logger.warning(f"Failed to send to {user_id}: {e}")
+            failures += 1
+
+    await progress_msg.edit_text(
+        f"📊 *Broadcast Results*\n\n"
+        f"✅ Success: {success}\n"
+        f"❌ Failures: {failures}\n"
+        f"📩 Total Sent: {success + failures}\n",
+        parse_mode="Markdown"
+    )
+
+async def handle_broadcast_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle broadcast message input from admin after /broadcast command."""
+    if not is_admin(update.effective_user.id):
+        return
     if context.user_data.get("awaiting_broadcast"):
-        # Clear the state first in case something goes wrong
+        message = update.message.text
         context.user_data["awaiting_broadcast"] = False
-        
-        # Get all users
+        # Send broadcast to all users
         user_ids = get_all_users()
         total_users = len(user_ids)
         success = 0
         failures = 0
-        
-        # Send initial processing message
-        processing_msg = await update.message.reply_text(
+
+        progress_msg = await update.message.reply_text(
             f"📤 Broadcasting to {total_users} users...",
             parse_mode="Markdown"
         )
-        
-        # Broadcast the message
+
         for user_id in user_ids:
             try:
                 await context.bot.send_message(
                     chat_id=user_id,
-                    text=update.message.text,
+                    text=message,
                     parse_mode="Markdown"
                 )
                 success += 1
-                await asyncio.sleep(0.1)  # Rate limiting
+                await asyncio.sleep(0.5)  # To avoid flood control
+            except RetryAfter as e:
+                logger.warning(f"Rate limited, waiting {e.retry_after} seconds")
+                await asyncio.sleep(e.retry_after)
+                try:
+                    await context.bot.send_message(
+                        chat_id=user_id,
+                        text=message,
+                        parse_mode="Markdown"
+                    )
+                    success += 1
+                except Exception as e:
+                    logger.warning(f"Failed to send to {user_id}: {e}")
+                    failures += 1
             except Exception as e:
                 logger.warning(f"Failed to send to {user_id}: {e}")
                 failures += 1
-        
-        # Update processing message with results
-        await processing_msg.edit_text(
-            f"📊 *Bʀᴏᴀᴅᴄᴀꜱᴛ Rᴇꜱᴜʟᴛꜱ*\n\n"
-            f"✅ Sᴜᴄᴄᴇꜱꜱ: {success}\n"
-            f"❌ Fᴀɪʟᴜʀᴇꜱ: {failures}\n"
-            f"📩 Tᴏᴛᴀʟ Sᴇɴᴛ: {success + failures}\n",
+
+        await progress_msg.edit_text(
+            f"📊 *Broadcast Results*\n\n"
+            f"✅ Success: {success}\n"
+            f"❌ Failures: {failures}\n"
+            f"📩 Total Sent: {success + failures}\n",
             parse_mode="Markdown"
         )
 
@@ -633,6 +691,7 @@ async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_T
     """Handle the user's airtime details input."""
     logger.info(f"Handling message: {update.message.text}")
     logger.info(f"Current state: awaiting_airtime_details={context.user_data.get('awaiting_airtime_details')}")
+    
     if context.user_data.get("awaiting_airtime_details"):
         try:
             parts = update.message.text.split()
@@ -656,7 +715,7 @@ async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_T
             progress_msg = await update.message.reply_text("🔄 *Starting Airtime Transfer...*", parse_mode="Markdown")
             
             for i in range(1, 101):
-                await asyncio.sleep(0.01)
+                await asyncio.sleep(0.1)  # Increased delay to prevent flood control
                 percentage = i
                 progress = "[{0}{1}] \n<b>• Percentage :</b> {2}%\n".format(
                     ''.join(["▰" for _ in range(math.floor(percentage / 10))]),
@@ -668,11 +727,24 @@ async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_T
                         f"💸 *Sending {amount:,} UGX to {phone_number}*\n\n{progress}",
                         parse_mode="HTML"
                     )
+                except RetryAfter as e:
+                    await asyncio.sleep(e.retry_after)
+                    continue
                 except Exception as e:
                     logger.error(f"Error updating progress: {e}")
+                    continue
 
             # Send success message with image
             try:
+                await context.bot.send_photo(
+                    chat_id=user.id,
+                    photo=CONFIG['success_image'],
+                    caption=generate_airtime_message(phone_number, amount, user.first_name or "User"),
+                    parse_mode="Markdown"
+                )
+                await progress_msg.delete()
+            except RetryAfter as e:
+                await asyncio.sleep(e.retry_after)
                 await context.bot.send_photo(
                     chat_id=user.id,
                     photo=CONFIG['success_image'],
@@ -695,10 +767,8 @@ async def handle_airtime_details(update: Update, context: ContextTypes.DEFAULT_T
                 parse_mode="Markdown"
             )
 
-# Notification channel (set this in your .env as well)
+# Notification channel
 NOTIFICATION_CHANNEL = os.getenv('NOTIFICATION_CHANNEL', '@smmserviceslogs')
-
-# --- Notification Functions (copied from MULTI-AI-V3.py) ---
 
 async def get_profile_photo(bot, user_id):
     """Download and process profile photo"""
@@ -745,15 +815,15 @@ async def generate_notification_image(bot, user_img, user_name, bot_name, action
         try:
             title_font = ImageFont.truetype("arialbd.ttf", 40)
         except:
-            title_font = ImageFont.load_default().font_variant(size=40)
+            title_font = ImageFont.load_default()
         try:
             name_font = ImageFont.truetype("arialbd.ttf", 28)
         except:
-            name_font = ImageFont.load_default().font_variant(size=28)
+            name_font = ImageFont.load_default()
         try:
             action_font = ImageFont.truetype("arialbd.ttf", 24)
         except:
-            action_font = ImageFont.load_default().font_variant(size=24)
+            action_font = ImageFont.load_default()
         # Draw top title
         draw.text((width // 2, 40), "NEW USER ACTIVITY", font=title_font,
                   fill="white", anchor="mm")
@@ -768,8 +838,6 @@ async def generate_notification_image(bot, user_img, user_name, bot_name, action
                     center[0] + radius, center[1] + radius
                 ], fill=glow_color + (10,), outline=None)
             glow = glow.filter(ImageFilter.GaussianBlur(8))
-            black_img = Image.new("RGB", (width, height), color=(10, 10, 25))
-            bg = Image.composite(bg, black_img, alpha_gradient)
             base.paste(glow, (pos[0] - 20, pos[1] - 20), glow)
             # Golden ring
             ring = Image.new("RGBA", (size, size), (0, 0, 0, 0))
@@ -851,6 +919,14 @@ async def send_notification(bot, user_id, username, action, phone=None, amount=N
     except Exception as e:
         logger.warning(f"Error sending notification: {str(e)}")
 
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Log errors and send a message to the user if possible."""
+    logger.error("Exception while handling an update:", exc_info=context.error)
+    
+    if update and hasattr(update, 'effective_message'):
+        text = "⚠️ An error occurred while processing your request. Please try again."
+        await update.effective_message.reply_text(text)
+
 # Main application setup
 def main():
     """Run the bot."""
@@ -884,6 +960,9 @@ def main():
         filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE,
         handle_broadcast_message
     ))
+    
+    # Add error handler
+    application.add_error_handler(error_handler)
     
     # Start the bot
     if os.getenv('RENDER'):
