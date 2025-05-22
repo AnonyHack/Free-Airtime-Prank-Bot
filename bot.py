@@ -51,8 +51,8 @@ CONFIG = {
 }
 
 # Force Join Configuration
-CHANNEL_USERNAMES = os.getenv("CHANNEL_USERNAMES", "@megahubbots, @Freenethubz, @smmserviceslogs").split(",")
-CHANNEL_LINKS = os.getenv("CHANNEL_LINKS", "https://t.me/megahubbots, https://t.me/Freenethubz, https://t.me/smmserviceslogs").split(",")
+CHANNEL_USERNAMES = os.getenv("CHANNEL_USERNAMES", "@megahubbots, @Freenethubz").split(",")
+CHANNEL_LINKS = os.getenv("CHANNEL_LINKS", "https://t.me/megahubbots, https://t.me/Freenethubz").split(",")
 
 # MongoDB connection
 client = MongoClient(os.getenv('MONGODB_URI'))
