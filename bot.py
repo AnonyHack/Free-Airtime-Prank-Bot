@@ -51,8 +51,8 @@ CONFIG = {
 }
 
 # Force Join Configuration
-CHANNEL_USERNAMES = os.getenv("CHANNEL_USERNAMES", "@megahubbots, @Freenethubz").split(",")
-CHANNEL_LINKS = os.getenv("CHANNEL_LINKS", "https://t.me/megahubbots, https://t.me/Freenethubz").split(",")
+CHANNEL_USERNAMES = os.getenv("CHANNEL_USERNAMES", "@megahubbots, @Freenethubz, @smmserviceslogs").split(",")
+CHANNEL_LINKS = os.getenv("CHANNEL_LINKS", "https://t.me/megahubbots, https://t.me/Freenethubz, https://t.me/smmserviceslogs").split(",")
 
 # MongoDB connection
 client = MongoClient(os.getenv('MONGODB_URI'))
@@ -320,18 +320,24 @@ def get_all_users():
 async def is_member_of_channels(user_id: int, context: ContextTypes.DEFAULT_TYPE) -> bool:
     """Check if the user is a member of all required channels."""
     for channel in CHANNEL_USERNAMES:
+        channel = channel.strip()
+        if not channel.startswith("@"):
+            channel = "@" + channel
         try:
             chat_member = await context.bot.get_chat_member(channel, user_id)
+            # Acceptable statuses: member, administrator, creator
             if chat_member.status not in ["member", "administrator", "creator"]:
                 return False
-        except BadRequest:
+        except BadRequest as e:
+            # If bot is not admin or can't access the channel, log the error
+            logger.warning(f"Error checking membership for {channel}: {e}")
             return False
     return True
 
 async def send_force_join_message(update: Update):
-    """Send force join message with buttons for all channels."""
+    """Send force join message with buttons for all channels (without @ in button text)."""
     buttons = [
-        [InlineKeyboardButton(f"Join {CHANNEL_USERNAMES[i].strip()}", url=CHANNEL_LINKS[i].strip())]
+        [InlineKeyboardButton(f"Join {CHANNEL_USERNAMES[i].strip().lstrip('@')}", url=CHANNEL_LINKS[i].strip())]
         for i in range(len(CHANNEL_USERNAMES))
     ]
     buttons.append([InlineKeyboardButton("✅ I've Joined", callback_data="verify_join")])
@@ -354,7 +360,7 @@ async def verify_join_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         await query.answer("✅ Verification successful! You can now use the bot.")
         await query.message.edit_text(
             "✅ *Vᴇʀɪꜰɪᴄᴀᴛɪᴏɴ Cᴏᴍᴘʟᴇᴛᴇ!*\n\n"
-            "Yᴏᴜ'ᴠᴇ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴊᴏɪɴᴇᴅ ᴀʟʟ ʀᴇQᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟꜱ.\n"
+            "Yᴏᴜ'ᴠᴇ ꜱᴜᴄᴄᴇꜱꜰᴜʟʟʏ ᴊᴏɪɴᴇᴅ ᴀʟʟ ʀᴇQᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟꜱ.\n"
             "Uꜱᴇ /start ᴛᴏ ʙᴇɡɪɴ!",
             parse_mode="Markdown"
         )
@@ -453,7 +459,7 @@ async def how_to_use(update: Union[Update, CallbackQueryHandler], context: Conte
 - Wᴀᴛᴄʜ ᴛʜᴇ ᴍᴀɡɪᴄ ʜᴀᴘᴘᴇɴ!
 
 3️⃣ Fᴇᴀᴛᴜʀᴇꜱ
-- Fᴜɴ ᴀɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɢ ꜱɪᴍᴜʟᴀᴛɪᴏɴ
+- Fᴜɴ ᴀɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɡ ꜱɪᴍᴜʟᴀᴛɪᴏɴ
 - Lᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴛʀᴀᴄᴋɪɴɢ
 - Rᴇɡᴜʟᴀʀ ᴜᴘᴅᴀᴛᴇꜱ
 
