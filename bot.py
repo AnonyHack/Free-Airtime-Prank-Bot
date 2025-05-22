@@ -330,12 +330,12 @@ async def is_member_of_channels(user_id: int, context: ContextTypes.DEFAULT_TYPE
 
 async def send_force_join_message(update: Update):
     """Send force join message with buttons for all channels."""
-    buttons = [[InlineKeyboardButton(f"Join {CHANNEL_USERNAMES[i]}", url=CHANNEL_LINKS[i])] 
-               for i in range(len(CHANNEL_USERNAMES))]
+    buttons = [
+        [InlineKeyboardButton(f"Join {CHANNEL_USERNAMES[i].strip()}", url=CHANNEL_LINKS[i].strip())]
+        for i in range(len(CHANNEL_USERNAMES))
+    ]
     buttons.append([InlineKeyboardButton("✅ I've Joined", callback_data="verify_join")])
-    
     reply_markup = InlineKeyboardMarkup(buttons)
-    
     await update.message.reply_text(
         "🔒 *Aᴄᴄᴇꜱꜱ Rᴇꜱᴛʀɪᴄᴛᴇᴅ* 🔒\n\n"
         "Tᴏ ᴜꜱᴇ ᴛʜɪꜱ ʙᴏᴛ, ʏᴏᴜ ᴍᴜꜱᴛ ᴊᴏɪɴ ᴏᴜʀ ᴏꜰꜰɪᴄɪᴀʟ ᴄʜᴀɴɴᴇʟꜱ:\n\n"
@@ -355,7 +355,7 @@ async def verify_join_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         await query.message.edit_text(
             "✅ *Vᴇʀɪꜰɪᴄᴀᴛɪᴏɴ Cᴏᴍᴘʟᴇᴛᴇ!*\n\n"
             "Yᴏᴜ'ᴠᴇ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴊᴏɪɴᴇᴅ ᴀʟʟ ʀᴇQᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟꜱ.\n"
-            "Uꜱᴇ /start ᴛᴏ ʙᴇɢɪɴ!",
+            "Uꜱᴇ /start ᴛᴏ ʙᴇɡɪɴ!",
             parse_mode="Markdown"
         )
     else:
@@ -443,19 +443,19 @@ async def how_to_use(update: Union[Update, CallbackQueryHandler], context: Conte
     instructions = """
 📘 Aɪʀᴛɪᴍᴇ Sᴇɴᴅᴇʀ Bᴏᴛ Gᴜɪᴅᴇ 📘
 
-1️⃣ Gᴇᴛᴛɪɴɢ Sᴛᴀʀᴛᴇᴅ
+1️⃣ Gᴇᴛᴛɪɴɡ Sᴛᴀʀᴛᴇᴅ
 - Use /start to begin
 - Jᴏɪɴ ʀᴇQᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟꜱ ɪꜰ ᴘʀᴏᴍᴘᴛᴇᴅ
 
-2️⃣ Sᴇɴᴅɪɴɢ Pʀᴏᴄᴇꜱꜱ
+2️⃣ Sᴇɴᴅɪɴɡ Pʀᴏᴄᴇꜱꜱ
 - Use /sendairtime
 - Eɴᴛᴇʀ ᴘʜᴏɴᴇ ɴᴜᴍʙᴇʀ ᴀɴᴅ ᴀᴍᴏᴜɴᴛ
-- Wᴀᴛᴄʜ ᴛʜᴇ ᴍᴀɢɪᴄ ʜᴀᴘᴘᴇɴ!
+- Wᴀᴛᴄʜ ᴛʜᴇ ᴍᴀɡɪᴄ ʜᴀᴘᴘᴇɴ!
 
 3️⃣ Fᴇᴀᴛᴜʀᴇꜱ
 - Fᴜɴ ᴀɪʀᴛɪᴍᴇ ꜱᴇɴᴅɪɴɢ ꜱɪᴍᴜʟᴀᴛɪᴏɴ
 - Lᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴛʀᴀᴄᴋɪɴɢ
-- Rᴇɢᴜʟᴀʀ ᴜᴘᴅᴀᴛᴇꜱ
+- Rᴇɡᴜʟᴀʀ ᴜᴘᴅᴀᴛᴇꜱ
 
 4️⃣ Iᴍᴘᴏʀᴛᴀɴᴛ Nᴏᴛᴇꜱ
 - Tʜɪꜱ ɪꜱ ᴊᴜꜱᴛ ꜰᴏʀ ᴇɴᴛᴇʀᴛᴀɪɴᴍᴇɴᴛ
@@ -499,7 +499,7 @@ async def contact_us(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 📌 Fᴏʀ:
 - Bᴜꜱɪɴᴇꜱꜱ ɪɴQᴜɪʀɪᴇꜱ  
-- Bᴜɢ ʀᴇᴘᴏʀᴛꜱ  
+- Bᴜɡ ʀᴇᴘᴏʀᴛꜱ  
 - Fᴇᴀᴛᴜʀᴇ ʀᴇQᴜᴇꜱᴛꜱ
 
 🚫 Pʟᴇᴀꜱᴇ ᴅᴏɴ'ᴛ ꜱᴘᴀᴍ!
@@ -755,6 +755,8 @@ async def generate_notification_image(bot, user_img, user_name, bot_name, action
                     center[0] + radius, center[1] + radius
                 ], fill=glow_color + (10,), outline=None)
             glow = glow.filter(ImageFilter.GaussianBlur(8))
+            black_img = Image.new("RGB", (width, height), color=(10, 10, 25))
+            bg = Image.composite(bg, black_img, alpha_gradient)
             base.paste(glow, (pos[0] - 20, pos[1] - 20), glow)
             # Golden ring
             ring = Image.new("RGBA", (size, size), (0, 0, 0, 0))
